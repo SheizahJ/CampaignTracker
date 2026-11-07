@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { createUser } from '@/db/fetch_data/users';
 
-export default async function Register() {
+export default function Register_Page() {
   return (
     <main className="flex min-h-screen items-center justify-center">
       <form className="login w-full max-w-sm space-y-6 rounded-xs border border-black/10 p-8 shadow-sm">

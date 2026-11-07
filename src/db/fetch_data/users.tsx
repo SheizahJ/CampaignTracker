@@ -12,8 +12,28 @@ export interface User {
     password: string; // MUST BE HASHED
 }
 
+export class UserError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UserError';
+  }
+}
+
 // Adds a new USER into the database
 export async function createUser(username: string, password: string): Promise<string> {
+  if (!username.trim()) {
+    throw new UserError('Username is required.');
+  }
+
+  if (!password) {
+    throw new UserError('Password is required.');
+  }
+
+  const existingUser = await getUserByUsername(username);
+  if (existingUser) {
+    throw new UserError('That username is already taken.');
+  }
+
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(password, salt);
 
@@ -33,6 +53,10 @@ export async function getUsernames(): Promise<string[]> {
 
 // Gets one (1) USER from the database
 export async function getUserByUsername(username: string): Promise<User | null> {
+  if (!username.trim()) {
+    throw new UserError('Username is required.');
+  }
+
   const result = await db.execute({
     sql: `SELECT * FROM user WHERE username = ?`,
     args: [username],
