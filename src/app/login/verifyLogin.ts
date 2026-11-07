@@ -22,7 +22,16 @@ export async function login(
   }
 
   const cookieStore = await cookies();
+  const username = String(formData.get("username"));
+
   cookieStore.set("signed_in", crypto.randomUUID(), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
+  cookieStore.set("username", username, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

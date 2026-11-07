@@ -9,10 +9,21 @@ export async function register(
   formData: FormData,
 ): Promise<string> {
   try {
+    const username = String(formData.get("username"));
+
     await createUser(
-      String(formData.get("username")),
+      username,
       String(formData.get("password")),
     );
+
+    const cookieStore = await cookies();
+    cookieStore.set("username", username, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
   } catch (error) {
     return error instanceof Error ? error.message : "Unable to register.";
   }

@@ -11,6 +11,9 @@
   --overlay-1: #fbf2de;
 
   --theme-orange: #f19f13;
+  --theme-light-orange: #ffd48b;
+  --font-body: Verdana, Arial, Helvetica, sans-serif;
+  --font-heading: Georgia, "Times New Roman", serif;
 }
 
 @theme inline {
@@ -31,38 +34,70 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  line-height: 1.6;
 }
 
-h1 {
-  font-size: 2.20rem;
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
   font-weight: 700;
   color: var(--theme-orange);
 }
 
+h1 {
+  font-size: 2.20rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.35rem;
+}
+
+h4 {
+  font-size: 1.15rem;
+}
+
 main {
-  padding: 10px;
+  padding: 5px;
 }
 
 a, Link {
   color: var(--theme-orange);
 }
 
+hr {
+  color: var(--theme-orange);
+}
+
 button {
   background-color: var(--theme-orange);
 }
-
 button:hover {
   background-color: #bd7d0f;
 }
 
+button.light {
+  background-color: var(--theme-light-orange);
+}
+button.light:hover {
+  background-color: #f8b137;
+}
+
 
 /* ---- CUSTOM ---- */
+.content {
+  background-color: var(--overlay-1);
+}
+
 .login {
   background-color: var(--overlay-1);
 }
 
-.logo, .logo-sm {
+.logo, .logo-sm, .logo-md, .logo-lg {
   background-color: var(--theme-orange);
   mask: url("/session_zero_logo.png") center / contain no-repeat;
   -webkit-mask: url("/session_zero_logo.png") center / contain no-repeat;
@@ -71,4 +106,14 @@ button:hover {
 .logo-sm {
   width: 40px;
   height: 40px;
+}
+
+.logo-md {
+  width: 50px;
+  height: 50px;
+}
+
+.logo-lg {
+  width: 60px;
+  height: 60px;
 }
