@@ -11,7 +11,7 @@ export default function LoginForm() {
     <form action={formAction} className="login w-full max-w-sm space-y-6 rounded-xs border border-black/10 p-8 shadow-sm">
       <div>
         <div className="mb-2 flex items-center gap-3">
-          <Link href="/" className="logo-sm" />
+          <span className="logo-sm" />
           <h1 className="mb-0">Login</h1>
         </div>
         <p className="text-gray-600">

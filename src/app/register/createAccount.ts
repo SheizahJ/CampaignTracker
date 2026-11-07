@@ -1,6 +1,6 @@
 "use server";
 
-import { createUser } from "@/db/fetch_data/users";
+import { UserError, createUser } from "@/db/fetch_data/users";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -9,11 +9,18 @@ export async function register(
   formData: FormData,
 ): Promise<string> {
   try {
-    const username = String(formData.get("username"));
+    const registerKey = String(formData.get("register-key")).trim();
+    const storedKey = process.env.REGISTER_KEY;
+
+    if (!storedKey || registerKey != storedKey) {
+      throw new UserError("Registration key does not match.");
+    }
+
+    const username = String(formData.get("username")).trim();
 
     await createUser(
       username,
-      String(formData.get("password")),
+      String(formData.get("password")).trim(),
     );
 
     const cookieStore = await cookies();

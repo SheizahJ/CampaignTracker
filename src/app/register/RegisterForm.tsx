@@ -11,7 +11,7 @@ export default function RegisterForm() {
     <form action={formAction} className="login w-full max-w-sm space-y-6 rounded-xs border border-black/10 p-8 shadow-sm">
       <div>
         <div className="mb-2 flex items-center gap-3">
-          <Link href="/" className="logo-sm" />
+          <span className="logo-sm" />
           <h1 className="mb-0">Register</h1>
         </div>
         <p className="text-gray-600">
@@ -44,6 +44,18 @@ export default function RegisterForm() {
           autoComplete="new-password"
           required
         />
+      </div>
+
+      <div className="space-y-2">
+        <label className="block font-medium" htmlFor="password">Registration Token</label>
+        <input
+          className="w-full rounded-md border border-gray-300 px-3 py-2"
+          id="register-key"
+          name="register-key"
+          type="password"
+          required
+        />
+        <p className="text-center text-sm italic opacity-50">Please contact the owner for access...</p>
       </div>
 
       <button
