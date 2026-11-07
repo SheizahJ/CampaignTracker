@@ -8,6 +8,9 @@
 :root {
   --background: #f5dfbb;
   --foreground: #171717;
+  --overlay-1: #fbf2de;
+
+  --theme-orange: #f19f13;
 }
 
 @theme inline {
@@ -32,11 +35,40 @@ body {
 }
 
 h1 {
-  font-size: 2.25rem;
+  font-size: 2.20rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  color: var(--theme-orange);
 }
 
 main {
   padding: 10px;
+}
+
+a, Link {
+  color: var(--theme-orange);
+}
+
+button {
+  background-color: var(--theme-orange);
+}
+
+button:hover {
+  background-color: #bd7d0f;
+}
+
+
+/* ---- CUSTOM ---- */
+.login {
+  background-color: var(--overlay-1);
+}
+
+.logo, .logo-sm {
+  background-color: var(--theme-orange);
+  mask: url("/session_zero_logo.png") center / contain no-repeat;
+  -webkit-mask: url("/session_zero_logo.png") center / contain no-repeat;
+}
+
+.logo-sm {
+  width: 40px;
+  height: 40px;
 }
