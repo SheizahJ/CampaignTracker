@@ -3,17 +3,18 @@
 */
 
 import { CampaignBlock, InviteBlock } from "./CampaignProps";
+import { cookies } from "next/headers";
+import {
+  type Campaign,
+  getCampaignsByCreator,
+} from "@/db/fetch_data/campaigns";
+import { CreateCampaignForm } from "./CreateCampaignForm";
 
 export default async function Campaigns_Page() {
-  const pendingInvites: { id: string; campaignName: string; invitedBy: string }[] =
-    [
-      {
-        id: "demo-invite",
-        campaignName: "The Lost Mine",
-        invitedBy: "Dungeon Master",
-      },
-    ];
-  const activeSessions: { id: string }[] = [];
+  const username = (await cookies()).get("username")?.value;
+  const yourCampaigns = username ? await getCampaignsByCreator(username) : [];
+  const pendingInvites: { id: string; campaignName: string; invitedBy: string }[] = [];
+  const activeSessions: Campaign[] = [];
 
   return (
     <main className="mx-auto mt-8 w-full max-w-7xl px-6 md:mt-12 md:px-10">
@@ -37,19 +38,15 @@ export default async function Campaigns_Page() {
         <hr className="mb-6 border-black/10" />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <button
-            className="light group flex min-h-32 flex-col items-start justify-between rounded-md bg-white/40 p-5 text-left outline-2 outline-dashed outline-[var(--theme-orange)] -outline-offset-4 hover:bg-white/75 hover:outline-white"
-            type="button"
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--theme-orange)] text-2xl text-white transition-colors group-hover:bg-white group-hover:text-[var(--theme-orange)]">
-              +
-            </span>
-            <span className="font-semibold text-[var(--theme-orange)] group-hover:text-white">
-              Create a campaign
-            </span>
-          </button>
+          <CreateCampaignForm />
 
-          <CampaignBlock/>
+          {yourCampaigns.map((campaign) => (
+            <CampaignBlock
+              key={campaign.id}
+              campaign={campaign}
+              currentUsername={username}
+            />
+          ))}
         </div>
       </section>
 
@@ -60,7 +57,11 @@ export default async function Campaigns_Page() {
         {activeSessions.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {activeSessions.map((session) => (
-              <CampaignBlock key={session.id} />
+              <CampaignBlock
+                key={session.id}
+                campaign={session}
+                currentUsername={username}
+              />
             ))}
           </div>
         ) : (

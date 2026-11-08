@@ -35,6 +35,14 @@ export interface CreateCampaignInput {
   bannerImageUrl?: string | null;
 }
 
+export interface UpdateCampaignInput {
+  title?: string;
+  subtitle?: string | null;
+  description?: string | null;
+  status?: CampaignStatus;
+  bannerImageUrl?: string | null;
+}
+
 export class CampaignError extends Error {
   constructor(message: string) {
     super(message);
@@ -116,6 +124,102 @@ export async function createCampaign(
   });
 
   return id;
+}
+
+// Updates a CAMPAIGN when requested by its creator
+export async function updateCampaign(
+  id: string,
+  creator: string,
+  updates: UpdateCampaignInput,
+): Promise<void> {
+  const normalizedId = id.trim();
+  const normalizedCreator = creator.trim();
+
+  if (!normalizedId) {
+    throw new CampaignError('Campaign ID is required.');
+  }
+
+  if (!normalizedCreator) {
+    throw new CampaignError('Campaign creator is required.');
+  }
+
+  if (updates.title !== undefined && !updates.title.trim()) {
+    throw new CampaignError('Campaign title is required.');
+  }
+
+  if (updates.status !== undefined && !validateStatus(updates.status)) {
+    throw new CampaignError('Campaign status is invalid.');
+  }
+
+  const currentCampaign = await getCampaignById(normalizedId);
+  if (!currentCampaign || currentCampaign.creator !== normalizedCreator) {
+    throw new CampaignError(
+      'Campaign was not found or you do not have permission to update it.',
+    );
+  }
+
+  const result = await db.execute({
+    sql: `
+      UPDATE campaign
+      SET title = ?,
+          subtitle = ?,
+          description = ?,
+          status = ?,
+          banner_image_url = ?,
+          last_updated = ?
+      WHERE id = ? AND creator = ?
+    `,
+    args: [
+      updates.title?.trim() ?? currentCampaign.title,
+      updates.subtitle === undefined
+        ? currentCampaign.subtitle
+        : updates.subtitle?.trim() || null,
+      updates.description === undefined
+        ? currentCampaign.description
+        : updates.description?.trim() || null,
+      updates.status ?? currentCampaign.status,
+      updates.bannerImageUrl === undefined
+        ? currentCampaign.bannerImageUrl
+        : updates.bannerImageUrl?.trim() || null,
+      new Date().toISOString(),
+      normalizedId,
+      normalizedCreator,
+    ],
+  });
+
+  if (result.rowsAffected === 0) {
+    throw new CampaignError(
+      'Campaign was not found or you do not have permission to update it.',
+    );
+  }
+}
+
+// Deletes a CAMPAIGN when requested by its creator
+export async function deleteCampaign(
+  id: string,
+  creator: string,
+): Promise<void> {
+  const normalizedId = id.trim();
+  const normalizedCreator = creator.trim();
+
+  if (!normalizedId) {
+    throw new CampaignError('Campaign ID is required.');
+  }
+
+  if (!normalizedCreator) {
+    throw new CampaignError('Campaign creator is required.');
+  }
+
+  const result = await db.execute({
+    sql: 'DELETE FROM campaign WHERE id = ? AND creator = ?',
+    args: [normalizedId, normalizedCreator],
+  });
+
+  if (result.rowsAffected === 0) {
+    throw new CampaignError(
+      'Campaign was not found or you do not have permission to delete it.',
+    );
+  }
 }
 
 // Gets one (1) CAMPAIGN from the database

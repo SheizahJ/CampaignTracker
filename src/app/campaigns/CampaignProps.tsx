@@ -1,17 +1,92 @@
 
+"use client";
 
-export function CampaignBlock() {
-    var isDM = true;
+import { useState } from "react";
+import type { Campaign } from "@/db/fetch_data/campaigns";
+import { displayUsername } from "@/lib/displayUsername";
+import { deleteExistingCampaign } from "./actions";
+
+interface CampaignBlockProps {
+    campaign: Campaign;
+    currentUsername?: string;
+}
+
+export function CampaignBlock({ campaign, currentUsername }: CampaignBlockProps) {
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [deleteTitle, setDeleteTitle] = useState("");
+    const titleMatches = deleteTitle === campaign.title;
+
     return (
-        <button
-            className={(isDM ? "dm-mark" : "" ) + " light flex min-h-32 items-end justify-between overflow-hidden rounded-md border border-black/10 p-5 text-left shadow-sm hover:shadow-md"}
+        <div className="relative">
+          <button
+            className="campaign_banner light flex min-h-32 w-full items-end justify-between overflow-hidden rounded-md border border-black/10 bg-cover bg-center p-5 text-left shadow-sm hover:shadow-md"
+            style={campaign.bannerImageUrl ? { backgroundImage: `url(${campaign.bannerImageUrl})` } : undefined}
             type="button"
           >
-            <div className="relative z-10 flex flex-col items-start justify-end">
-                <span className="text-lg font-semibold">New adventure</span>
-                <span className="text-sm text-black/50">Campaign</span>
+            <div className="relative z-10 flex h-full w-full flex-col items-start">
+                {campaign.creator !== currentUsername && (
+                    <span className="uppercase text-sm font-bold text-black/50+">
+                        [DM {displayUsername(campaign.creator)}]
+                    </span>
+                )}
+                <div className="mt-auto flex flex-col items-start">
+                    <span className="title text-lg font-bold">{campaign.title}</span>
+                    <span className="text-sm text-black/50">
+                        {campaign.subtitle ?? "Campaign"}
+                    </span>
+                </div>
             </div>
-        </button>
+          </button>
+          {campaign.creator === currentUsername && (
+              <form action={deleteExistingCampaign} className="absolute right-2 top-2 z-20">
+                  <input type="hidden" name="campaignId" value={campaign.id} />
+                  <button
+                      aria-label={`Delete ${campaign.title}`}
+                      className="no-bg rounded p-1"
+                      onClick={() => setConfirmDelete(true)}
+                      type="button"
+                  >
+                      <span aria-hidden="true" className="trash-icon block" />
+                  </button>
+              </form>
+          )}
+          {confirmDelete && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6">
+                  <form action={deleteExistingCampaign} className="content w-full max-w-sm rounded-md border border-black/10 p-6 shadow-xl">
+                      <input type="hidden" name="campaignId" value={campaign.id} />
+                      <h3 className="mb-2">Delete campaign?</h3>
+                      <p className="mb-6 text-sm text-black/60">
+                          This will permanently delete {campaign.title}.
+                      </p>
+                      <label className="mb-6 block text-sm" htmlFor={`delete-title-${campaign.id}`}>
+                          Type <strong>{campaign.title}</strong> to confirm.
+                          <input
+                              className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2"
+                              id={`delete-title-${campaign.id}`}
+                              onChange={(event) => setDeleteTitle(event.target.value)}
+                              value={deleteTitle}
+                          />
+                      </label>
+                      <div className="flex justify-end gap-3">
+                          <button
+                              className="no-bg rounded border border-black/20 px-4 py-2"
+                              onClick={() => setConfirmDelete(false)}
+                              type="button"
+                          >
+                              Cancel
+                          </button>
+                          <button
+                              className="rounded bg-red-700 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                              disabled={!titleMatches}
+                              type="submit"
+                          >
+                              Confirm
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          )}
+        </div>
     );
 }
 
@@ -31,7 +106,7 @@ export function InviteBlock({ campaignName, invitedBy }: InviteBlockProps) {
                     <div>
                         <h3 className="title text-xl font-semibold">{campaignName}</h3>
                         <p className="text-sm text-black/60">
-                            {invitedBy} invited you to join this campaign.
+                            {displayUsername(invitedBy)} invited you to join this campaign.
                         </p>
                     </div>
                 </div>
