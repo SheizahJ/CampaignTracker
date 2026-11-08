@@ -13,14 +13,13 @@ export default async function Campaigns_Page() {
         invitedBy: "Dungeon Master",
       },
     ];
+  const activeSessions: { id: string }[] = [];
 
   return (
-    <main className="mx-auto mt-20 w-full max-w-7xl px-6 md:mt-24 md:px-10">
+    <main className="mx-auto mt-8 w-full max-w-7xl px-6 md:mt-12 md:px-10">
       {pendingInvites.length > 0 && (
         <section className="content mb-6 rounded-xs border border-black/10 p-6 shadow-sm md:p-8">
-          <h1 className="mb-3">Pending Invites...</h1>
-          <hr className="mb-6 border-black/10" />
-
+          <h3 className="mb-2">NEW INVITE!</h3>
           <div className="grid gap-4">
             {pendingInvites.map((invite) => (
               <InviteBlock
@@ -33,8 +32,8 @@ export default async function Campaigns_Page() {
         </section>
       )}
 
-      <section className="content mb-6 rounded-xs border border-black/10 p-6 shadow-sm md:p-8">
-        <h1 className="mb-3">Your Campaigns</h1>
+      <section className="content mb-1 rounded-xs border border-black/10 p-6 shadow-sm md:p-8">
+        <h2 className="mb-3">Your Campaigns</h2>
         <hr className="mb-6 border-black/10" />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -55,12 +54,18 @@ export default async function Campaigns_Page() {
       </section>
 
       <section className="content rounded-xs border border-black/10 p-6 shadow-sm md:p-8">
-        <h1 className="mb-3">Participating In</h1>
+        <h2 className="mb-3">Active Sessions</h2>
         <hr className="mb-6 border-black/10" />
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <CampaignBlock />
-        </div>
+        {activeSessions.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {activeSessions.map((session) => (
+              <CampaignBlock key={session.id} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-black/50">Not participating in any sessions yet...</p>
+        )}
       </section>
     </main>
   );

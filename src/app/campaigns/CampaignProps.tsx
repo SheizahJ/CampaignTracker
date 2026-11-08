@@ -8,8 +8,8 @@ export function CampaignBlock() {
             type="button"
           >
             <div className="relative z-10 flex flex-col items-start justify-end">
-                <span className="text-sm text-black/50">Campaign</span>
                 <span className="text-lg font-semibold">New adventure</span>
+                <span className="text-sm text-black/50">Campaign</span>
             </div>
         </button>
     );
@@ -29,10 +29,7 @@ export function InviteBlock({ campaignName, invitedBy }: InviteBlockProps) {
                         ✉
                     </span>
                     <div>
-                        <span className="text-xs font-bold uppercase tracking-widest text-[var(--theme-orange)]">
-                            You are invited
-                        </span>
-                        <h2 className="text-xl font-semibold">{campaignName}</h2>
+                        <h3 className="title text-xl font-semibold">{campaignName}</h3>
                         <p className="text-sm text-black/60">
                             {invitedBy} invited you to join this campaign.
                         </p>

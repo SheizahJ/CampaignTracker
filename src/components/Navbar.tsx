@@ -12,14 +12,14 @@ type NavbarProps = {
 };
 
 const navigationLinks = [
-    { href: "/campaigns", label: "View Campaigns" },
+    { href: "/campaigns", label: "Campaigns" },
     { href: "/character", label: "My Characters" },
 ];
 
 export default function Navbar({ username }: NavbarProps) {
     const pathname = usePathname();
     const [notificationsOpen, setNotificationsOpen] = useState(false);
-    const hasNotifications = true;
+    const hasNotifications = false; // UPDATE WHEN NOTIFICATIONS ARE MADE
     const notificationsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

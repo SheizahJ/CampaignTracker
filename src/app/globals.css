@@ -12,6 +12,8 @@
 
   --theme-orange: #f19f13;
   --theme-light-orange: #ffd48b;
+  --theme-grey: #a6a6a6;
+
   --font-body: Verdana, Arial, Helvetica, sans-serif;
   --font-heading: Georgia, "Times New Roman", serif;
 }
@@ -43,6 +45,14 @@ h1, h2, h3, h4 {
   line-height: 1.2;
   font-weight: 700;
   color: var(--theme-orange);
+}
+
+.title {
+  color: black;
+}
+
+.subtitle {
+  color: var(--theme-grey);
 }
 
 h1 {
@@ -137,9 +147,9 @@ button.light:hover {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-color: red;
+  background-color: white;
   mask: url("/mark_of_the_dm.png") right center / auto 100% no-repeat;
   -webkit-mask: url("/mark_of_the_dm.png") right center / auto 100% no-repeat;
   content: "";
-  opacity: 0.35;
+  opacity: 0.5;
 }
