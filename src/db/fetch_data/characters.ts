@@ -21,6 +21,7 @@ export interface Character {
   name: string;
   surname: string;
   dob: string;
+  imageUrl: string | null;
   stats: {
     str: number;
     dex: number;
@@ -110,6 +111,7 @@ export async function createCharacter(
         name,
         surname,
         dob,
+        image_url,
         strength,
         dexterity,
         constitution,
@@ -119,7 +121,7 @@ export async function createCharacter(
         bank_json,
         proficiencies_json,
         skills_json
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
     args: [
       id,
@@ -127,6 +129,7 @@ export async function createCharacter(
       character.name.trim(),
       character.surname.trim(),
       character.dob.trim(),
+      character.imageUrl?.trim() || null,
       character.stats.str,
       character.stats.dex,
       character.stats.con,
@@ -157,6 +160,7 @@ export async function getCharacterById(id: string): Promise<Character | null> {
     name: String(row.name),
     surname: String(row.surname),
     dob: String(row.dob),
+    imageUrl: row.image_url == null ? null : String(row.image_url),
     stats: {
       str: Number(row.strength),
       dex: Number(row.dexterity),
