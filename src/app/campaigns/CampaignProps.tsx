@@ -15,6 +15,7 @@ export function CampaignBlock({ campaign, currentUsername }: CampaignBlockProps)
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [deleteTitle, setDeleteTitle] = useState("");
     const titleMatches = deleteTitle === campaign.title;
+    const isCreator = campaign.creator === currentUsername;
 
     return (
         <div className="relative">
@@ -37,7 +38,7 @@ export function CampaignBlock({ campaign, currentUsername }: CampaignBlockProps)
                 </div>
             </div>
           </button>
-          {campaign.creator === currentUsername && (
+          {isCreator && (
               <form action={deleteExistingCampaign} className="absolute right-2 top-2 z-20">
                   <input type="hidden" name="campaignId" value={campaign.id} />
                   <button
@@ -50,24 +51,58 @@ export function CampaignBlock({ campaign, currentUsername }: CampaignBlockProps)
                   </button>
               </form>
           )}
+          {!isCreator && (
+              <button
+                  aria-label={`Leave ${campaign.title}`}
+                  className="no-bg absolute right-2 top-2 z-20 rounded p-1"
+                  onClick={() => setConfirmDelete(true)}
+                  type="button"
+              >
+                  <span aria-hidden="true" className="leave-icon block" />
+              </button>
+          )}
           {confirmDelete && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6">
-                  <form action={deleteExistingCampaign} className="content w-full max-w-sm rounded-md border border-black/10 p-6 shadow-xl">
-                      <input type="hidden" name="campaignId" value={campaign.id} />
-                      <h3 className="mb-2">Delete campaign?</h3>
-                      <p className="mb-6 text-sm text-black/60">
-                          This will permanently delete {campaign.title}.
-                      </p>
-                      <label className="mb-6 block text-sm" htmlFor={`delete-title-${campaign.id}`}>
-                          Type <strong>{campaign.title}</strong> to confirm.
-                          <input
-                              className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2"
-                              id={`delete-title-${campaign.id}`}
-                              onChange={(event) => setDeleteTitle(event.target.value)}
-                              value={deleteTitle}
-                          />
-                      </label>
-                      <div className="flex justify-end gap-3">
+                  {isCreator ? (
+                    <form action={deleteExistingCampaign} className="content w-full max-w-sm rounded-md border border-black/10 p-6 shadow-xl">
+                        <input type="hidden" name="campaignId" value={campaign.id} />
+                        <h3 className="mb-2">Delete campaign?</h3>
+                        <p className="mb-6 text-sm text-black/60">
+                            This will permanently delete {campaign.title}.
+                        </p>
+                        <label className="mb-6 block text-sm" htmlFor={`delete-title-${campaign.id}`}>
+                            Type <strong>{campaign.title}</strong> to confirm.
+                            <input
+                                className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2"
+                                id={`delete-title-${campaign.id}`}
+                                onChange={(event) => setDeleteTitle(event.target.value)}
+                                value={deleteTitle}
+                            />
+                        </label>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                className="no-bg rounded border border-black/20 px-4 py-2"
+                                onClick={() => setConfirmDelete(false)}
+                                type="button"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="rounded bg-red-700 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                                disabled={!titleMatches}
+                                type="submit"
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </form>
+                  ) : (
+                    <div className="content w-full max-w-sm rounded-md border border-black/10 p-6 shadow-xl">
+                        <h3 className="mb-2">Leave session?</h3>
+                        <p className="mb-6 text-sm text-black/60">
+                            Leave {campaign.title}?
+                        </p>
+                        <div className="flex justify-end gap-3">
                           <button
                               className="no-bg rounded border border-black/20 px-4 py-2"
                               onClick={() => setConfirmDelete(false)}
@@ -75,15 +110,12 @@ export function CampaignBlock({ campaign, currentUsername }: CampaignBlockProps)
                           >
                               Cancel
                           </button>
-                          <button
-                              className="rounded bg-red-700 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
-                              disabled={!titleMatches}
-                              type="submit"
-                          >
+                          <button className="rounded bg-red-700 px-4 py-2 font-semibold text-white" onClick={() => setConfirmDelete(false)} type="button">
                               Confirm
                           </button>
                       </div>
-                  </form>
+                    </div>
+                  )}
               </div>
           )}
         </div>
