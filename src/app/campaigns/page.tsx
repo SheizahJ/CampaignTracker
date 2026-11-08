@@ -2,9 +2,11 @@
   Campaigns Page
 */
 
+import { CampaignBlock } from "./CampaignBlock";
+
 export default async function Campaigns_Page() {
   return (
-    <main className="mx-auto mt-20 w-full max-w-5xl px-6 md:mt-24 md:px-10">
+    <main className="mx-auto mt-20 w-full max-w-7xl px-6 md:mt-24 md:px-10">
 
       <section className="content rounded-xs border border-black/10 p-6 shadow-sm md:p-8">
         <h1 className="mb-3">Your Campaigns</h1>
@@ -23,13 +25,7 @@ export default async function Campaigns_Page() {
             </span>
           </button>
 
-          <button
-            className="light flex min-h-32 flex-col items-start justify-end rounded-md border border-black/10 bg-white/50 p-5 text-left shadow-sm hover:shadow-md"
-            type="button"
-          >
-            <span className="text-sm text-black/50">Campaign</span>
-            <span className="text-lg font-semibold">New adventure</span>
-          </button>
+          <CampaignBlock/>
         </div>
       </section>
     </main>

@@ -75,7 +75,17 @@ hr {
 
 button {
   background-color: var(--theme-orange);
+  cursor: pointer;
 }
+
+button.no-bg {
+  background-color: transparent;
+}
+
+button.no-bg:hover {
+  background-color: transparent;
+}
+
 button:hover {
   background-color: #bd7d0f;
 }
@@ -116,4 +126,20 @@ button.light:hover {
 .logo-lg {
   width: 60px;
   height: 60px;
+}
+
+.dm-mark {
+  position: relative;
+  isolation: isolate;
+}
+
+.dm-mark::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: red;
+  mask: url("/mark_of_the_dm.png") right center / auto 100% no-repeat;
+  -webkit-mask: url("/mark_of_the_dm.png") right center / auto 100% no-repeat;
+  content: "";
+  opacity: 0.35;
 }
