@@ -6,20 +6,21 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { logout } from "../app/login/logout";
 import Notifications from "./Notifications";
+import { displayUsername } from "@/lib/displayUsername";
 
 type NavbarProps = {
     username?: string;
 };
 
 const navigationLinks = [
-    { href: "/campaigns", label: "View Campaigns" },
+    { href: "/campaigns", label: "Campaigns" },
     { href: "/character", label: "My Characters" },
 ];
 
 export default function Navbar({ username }: NavbarProps) {
     const pathname = usePathname();
     const [notificationsOpen, setNotificationsOpen] = useState(false);
-    const hasNotifications = true;
+    const hasNotifications = false; // UPDATE WHEN NOTIFICATIONS ARE MADE
     const notificationsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -86,7 +87,7 @@ export default function Navbar({ username }: NavbarProps) {
 
                 <div className="flex flex-col items-stretch gap-1">
                     <span className="text-sm font-bold uppercase text-[var(--theme-orange)]">
-                        {username && username.length > 10 ? `${username.slice(0, 10)}...` : username}
+                        {username ? displayUsername(username) : username}
                     </span>
                     <form action={logout} className="flex w-full items-center">
                         <button

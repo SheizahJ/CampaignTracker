@@ -12,6 +12,9 @@
 
   --theme-orange: #f19f13;
   --theme-light-orange: #ffd48b;
+  --theme-grey: #a6a6a6;
+  --theme-red: rgb(154, 22, 22);
+
   --font-body: Verdana, Arial, Helvetica, sans-serif;
   --font-heading: Georgia, "Times New Roman", serif;
 }
@@ -43,6 +46,14 @@ h1, h2, h3, h4 {
   line-height: 1.2;
   font-weight: 700;
   color: var(--theme-orange);
+}
+
+.title {
+  font-family: var(--font-heading);
+}
+
+.subtitle {
+  color: var(--theme-grey);
 }
 
 h1 {
@@ -128,18 +139,30 @@ button.light:hover {
   height: 60px;
 }
 
-.dm-mark {
+.trash-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--theme-red);
+  mask: url("/trash_icon.png") center / contain no-repeat;
+  -webkit-mask: url("/trash_icon.png") center / contain no-repeat;
+}
+
+.trash-icon:hover {
+  background-color: #de0909;
+}
+
+.campaign_banner {
   position: relative;
   isolation: isolate;
 }
 
-.dm-mark::before {
+.campaign_banner::before {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-color: red;
-  mask: url("/mark_of_the_dm.png") right center / auto 100% no-repeat;
-  -webkit-mask: url("/mark_of_the_dm.png") right center / auto 100% no-repeat;
+  background-color: white;
+  mask: url("/campaign_banner.png") right center / auto 100% no-repeat;
+  -webkit-mask: url("/campaign_banner.png") right center / auto 100% no-repeat;
   content: "";
-  opacity: 0.35;
+  opacity: 0.5;
 }
