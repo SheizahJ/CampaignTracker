@@ -142,6 +142,16 @@ export async function createCharacter(
   return id;
 }
 
+export async function deleteCharacter(
+  id: string,
+  username: string,
+): Promise<void> {
+  await db.execute({
+    sql: `DELETE FROM character WHERE id = ? AND username = ?`,
+    args: [id, username],
+  });
+}
+
 export async function getCharacterById(id: string): Promise<Character | null> {
   const result = await db.execute({
     sql: `SELECT * FROM character WHERE id = ?`,

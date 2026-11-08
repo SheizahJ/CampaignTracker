@@ -189,3 +189,17 @@ button.light:hover {
   mask: url("/default_character_icon.png") center / cover no-repeat;
   -webkit-mask: url("/default_character_icon.png") center / cover no-repeat;
 }
+
+.character_icon_frame {
+  padding: 3px;
+  background: linear-gradient(
+    135deg,
+    #8f1515,
+    #d94a4a,
+    #ffb0b0,
+    #ffb0b0,
+    #d94a4a,
+    #8f1515
+  );
+  background-size: 300% 300%;
+}
