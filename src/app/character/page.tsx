@@ -1,7 +1,13 @@
 
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { getCharactersByUsername } from "@/db/fetch_data/characters";
+import { CharacterBlock } from "./CharacterProps";
 
 export default async function Character_Page() {
+  const username = (await cookies()).get("username")?.value;
+  const characters = username ? await getCharactersByUsername(username) : [];
+
   return (
     <main className="mx-auto mt-8 w-full max-w-7xl px-6 md:mt-12 md:px-10">
       <section className="content rounded-xs border border-black/10 p-6 shadow-sm md:p-8">
@@ -21,13 +27,9 @@ export default async function Character_Page() {
             </span>
           </Link>
 
-          <button
-            className="light flex min-h-32 flex-col items-start justify-end rounded-md border border-black/10 p-5 text-left shadow-sm hover:shadow-md"
-            type="button"
-          >
-            <span className="text-sm text-black/50">Character</span>
-            <span className="text-lg font-semibold">New character</span>
-          </button>
+          {characters.map((character) => (
+            <CharacterBlock key={character.id} character={character} />
+          ))}
         </div>
       </section>
     </main>

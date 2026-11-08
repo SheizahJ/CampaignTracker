@@ -32,7 +32,6 @@ export interface Character {
   };
   bank: { gold: number; silver: number; copper: number };
   proficiencies: Proficiencies;
-  skills: string[];
 }
 
 export class CharacterError extends Error {
@@ -119,9 +118,8 @@ export async function createCharacter(
         wisdom,
         charisma,
         bank_json,
-        proficiencies_json,
-        skills_json
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        proficiencies_json
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
     args: [
       id,
@@ -138,7 +136,6 @@ export async function createCharacter(
       character.stats.cha,
       JSON.stringify(character.bank),
       JSON.stringify(character.proficiencies),
-      JSON.stringify(character.skills),
     ],
   });
 
@@ -171,6 +168,33 @@ export async function getCharacterById(id: string): Promise<Character | null> {
     },
     bank: JSON.parse(String(row.bank_json)),
     proficiencies: JSON.parse(String(row.proficiencies_json)),
-    skills: JSON.parse(String(row.skills_json)),
   };
+}
+
+export async function getCharactersByUsername(
+  username: string,
+): Promise<Character[]> {
+  const result = await db.execute({
+    sql: `SELECT * FROM character WHERE username = ? ORDER BY name ASC, surname ASC`,
+    args: [username],
+  });
+
+  return result.rows.map((row) => ({
+    id: String(row.id),
+    username: String(row.username),
+    name: String(row.name),
+    surname: String(row.surname),
+    dob: String(row.dob),
+    imageUrl: row.image_url == null ? null : String(row.image_url),
+    stats: {
+      str: Number(row.strength),
+      dex: Number(row.dexterity),
+      con: Number(row.constitution),
+      int: Number(row.intelligence),
+      wis: Number(row.wisdom),
+      cha: Number(row.charisma),
+    },
+    bank: JSON.parse(String(row.bank_json)),
+    proficiencies: JSON.parse(String(row.proficiencies_json)),
+  }));
 }

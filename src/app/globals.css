@@ -166,3 +166,26 @@ button.light:hover {
   content: "";
   opacity: 0.5;
 }
+
+.striped_banner {
+  position: relative;
+  isolation: isolate;
+}
+
+.striped_banner::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: white;
+  mask: url("/striped_banner.png") left center / 100% 100% no-repeat;
+  -webkit-mask: url("/striped_banner.png") left center / 100% 100% no-repeat;
+  content: "";
+  opacity: 0.5;
+}
+
+.default_character_icon {
+  display: block;
+  background-color: var(--theme-red);
+  mask: url("/default_character_icon.png") center / cover no-repeat;
+  -webkit-mask: url("/default_character_icon.png") center / cover no-repeat;
+}

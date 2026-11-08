@@ -14,8 +14,9 @@ function getNumber(formData: FormData, field: string): number {
 }
 
 function getList(formData: FormData, field: string): string[] {
-  return getText(formData, field)
-    .split(",")
+  return formData
+    .getAll(field)
+    .flatMap((value) => String(value).split(","))
     .map((value) => value.trim())
     .filter(Boolean);
 }
@@ -74,7 +75,6 @@ export async function createNewCharacter(formData: FormData): Promise<void> {
       copper: getNumber(formData, "copper"),
     },
     proficiencies,
-    skills: getList(formData, "skills"),
   });
 
   revalidatePath("/character");

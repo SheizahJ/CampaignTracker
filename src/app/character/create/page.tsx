@@ -21,9 +21,13 @@ const currencies = [
 ] as const;
 
 const proficiencyStats = ["STR", "DEX", "CON", "INT", "WIS", "CHA"] as const;
+type ProficiencyStat = (typeof proficiencyStats)[number];
 
 export default function CreateCharacterPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [proficiencyRows, setProficiencyRows] = useState<
+    { id: number; stat: ProficiencyStat; value: string }[]
+  >([]);
 
   useEffect(() => {
     return () => {
@@ -46,6 +50,17 @@ export default function CreateCharacterPage() {
       }
       return URL.createObjectURL(file);
     });
+  }
+
+  function addProficiency() {
+    setProficiencyRows((rows) => [
+      ...rows,
+      { id: rows.length, stat: "STR", value: "" },
+    ]);
+  }
+
+  function deleteProficiency(id: number) {
+    setProficiencyRows((rows) => rows.filter((row) => row.id !== id));
   }
 
   return (
@@ -131,21 +146,61 @@ export default function CreateCharacterPage() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="block font-medium" htmlFor="character-skills">Skills</label>
-              <input className="w-full rounded-md border border-gray-300 px-3 py-2" id="character-skills" name="skills" placeholder="Stealth, Persuasion" />
-              <p className="text-sm text-black/60">Separate multiple skills with commas.</p>
-            </div>
-            <div className="space-y-2">
-              <p className="font-medium">Proficiencies</p>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {proficiencyStats.map((stat) => (
-                  <div className="space-y-2" key={stat}>
-                    <label className="block text-sm" htmlFor={`proficiency-${stat}`}>{stat}</label>
-                    <input className="w-full rounded-md border border-gray-300 px-3 py-2" id={`proficiency-${stat}`} name={stat} placeholder="Longswords, shields" />
+              <p className="font-semibold text-[var(--theme-orange)]">Proficiencies</p>
+              <div className="space-y-3">
+                {proficiencyRows.map((row) => (
+                  <div className="flex gap-2" key={row.id}>
+                    <select
+                      className="rounded-md border border-gray-300 px-3 py-2"
+                      onChange={(event) => {
+                        const stat = event.target.value as ProficiencyStat;
+                        setProficiencyRows((rows) =>
+                          rows.map((item) =>
+                            item.id === row.id ? { ...item, stat } : item,
+                          ),
+                        );
+                      }}
+                      value={row.stat}
+                    >
+                      {proficiencyStats.map((stat) => (
+                        <option key={stat} value={stat}>
+                          {stat}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      className="min-w-0 flex-1 rounded-md border border-gray-300 px-3 py-2"
+                      name={row.stat}
+                      onChange={(event) =>
+                        setProficiencyRows((rows) =>
+                          rows.map((item) =>
+                            item.id === row.id
+                              ? { ...item, value: event.target.value }
+                              : item,
+                          ),
+                        )
+                      }
+                      placeholder="Enter a proficiency"
+                      value={row.value}
+                    />
+                    <button
+                      aria-label="Delete proficiency"
+                      className="no-bg rounded border border-black/20 px-3 text-lg text-black/50 hover:text-[var(--theme-red)]"
+                      onClick={() => deleteProficiency(row.id)}
+                      type="button"
+                    >
+                      ×
+                    </button>
                   </div>
                 ))}
+                <button
+                  className="no-bg w-full rounded-md border border-dashed border-[var(--theme-orange)] px-3 py-2 text-left font-medium text-[var(--theme-orange)] hover:bg-[var(--theme-orange)]/10"
+                  onClick={addProficiency}
+                  type="button"
+                >
+                  + Add a proficiency
+                </button>
               </div>
-              <p className="text-sm text-black/60">Separate multiple proficiencies with commas.</p>
             </div>
           </div>
 
